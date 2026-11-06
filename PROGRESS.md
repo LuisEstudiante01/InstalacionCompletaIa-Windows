@@ -1,6 +1,6 @@
 # Windows (PowerShell) installer: progress
 
-Status as of 2026-11-06. Written, NOT tested on Windows. No `pwsh` available where it was written.
+Status as of 2026-11-06. `packages`, `tools`, `link` tested on a Windows 11 Hyper-V VM (all tools detected). Not yet tested: `update.ps1`, `schedule-update.ps1`, herdr config path, prompt/font.
 
 ## Done
 - `install.ps1 [all|packages|tools|link]`: winget packages, Claude Code, opencode (npm), codegraph (npm), herdr, gentle-ai (go install), font, config links (symlink, falls back to copy).

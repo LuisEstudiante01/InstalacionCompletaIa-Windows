@@ -81,10 +81,10 @@ Este repositorio es un proyecto comunitario independiente y no está afiliado ni
 
 ### Notas
 
-**Estos scripts todavía no se probaron en Windows.** Revisa `install.ps1` antes de ejecutarlo: instala software. Sin
-verificar: los ids de `winget` (`Anthropic.ClaudeCode`, `DEVCOM.IosevkaTermNerdFont`, `wez.wezterm`, `Starship.Starship`),
-la URL del instalador de herdr, la ruta de su configuración y la instalación de engram (solo descarga manual desde los
-releases). Detalle en `PROGRESS.md`. Licencia MIT.
+Revisa `install.ps1` antes de ejecutarlo: instala software. Se probaron en una VM con Windows 11 (Hyper-V):
+`install.ps1 packages`, `tools` y `link` (todos los programas quedaron instalados y detectados; los enlaces de WezTerm,
+Neovim y el perfil de PowerShell se crearon). Sin probar: `update.ps1`, `schedule-update.ps1`, la ruta de configuración de
+herdr, el aspecto del prompt y la fuente en WezTerm. Tras instalar, abre una terminal nueva para que se actualice el PATH. Licencia MIT.
 
 [↑ Volver arriba / Back to top](#Instalacion-Completa-ia-Windows)
 
@@ -167,9 +167,9 @@ This repository is an independent community project and is not affiliated with o
 
 ### Notes
 
-**These scripts have not been tested on Windows yet.** Review `install.ps1` before running it: it installs software.
-Unverified: the `winget` ids (`Anthropic.ClaudeCode`, `DEVCOM.IosevkaTermNerdFont`, `wez.wezterm`, `Starship.Starship`),
-the herdr installer URL, its config path, and the engram install (manual download from releases only). See `PROGRESS.md`.
-Licensed under MIT.
+Review `install.ps1` before running it: it installs software. Tested on a Windows 11 VM (Hyper-V):
+`install.ps1 packages`, `tools` and `link` (every program was installed and detected; the WezTerm, Neovim and PowerShell
+profile links were created). Untested: `update.ps1`, `schedule-update.ps1`, herdr's config path, the prompt look and the
+WezTerm font. After installing, open a new terminal so PATH refreshes. Licensed under MIT.
 
 [↑ Back to top / Volver arriba](#Instalacion-Completa-ia-Windows)
