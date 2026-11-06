@@ -11,7 +11,7 @@ function Say($m) { Write-Host "==> $m" -ForegroundColor Cyan }
 function Has($c) { [bool](Get-Command $c -ErrorAction SilentlyContinue) }
 
 function Winget-Install($id) {
-  winget install --id $id -e --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Host
+  winget install --id $id -e --source winget --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Host
   if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne -1978335189) { $Missing.Add("winget:$id") }  # -1978335189 = already installed / no upgrade
 }
 
@@ -43,7 +43,7 @@ function Step-Tools {
     gentle-ai install --agent $agents --preset full-gentleman 2>&1 | Out-Host
   }
   # Font (IosevkaTerm Nerd Font) via winget when available
-  winget install --id DEVCOM.IosevkaTermNerdFont -e --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null
+  winget install --id DEVCOM.IosevkaTermNerdFont -e --source winget --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null
 }
 
 function Link($src, $dst) {
