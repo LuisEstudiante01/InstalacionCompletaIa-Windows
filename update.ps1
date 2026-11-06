@@ -2,8 +2,9 @@
 $ErrorActionPreference = 'Continue'
 $fail = @()
 function Run($n, [scriptblock]$b) { Write-Host "==> $n" -ForegroundColor Cyan; try { & $b; if ($LASTEXITCODE -gt 0 -and $LASTEXITCODE -ne -1978335189) { $script:fail += $n } } catch { $script:fail += $n } }
-if (Get-Command winget -ErrorAction SilentlyContinue) { Run 'winget' { winget upgrade --all --silent --accept-package-agreements --accept-source-agreements } }
+if (Get-Command winget -ErrorAction SilentlyContinue) { Run 'winget' { winget upgrade --all --source winget --silent --accept-package-agreements --accept-source-agreements } }
 if (Get-Command npm -ErrorAction SilentlyContinue)    { Run 'npm globals' { npm update -g } }
-if (Get-Command claude -ErrorAction SilentlyContinue) { Run 'claude' { claude update } }
+if (Get-Command go -ErrorAction SilentlyContinue)    { Run 'gentle-ai binary' { go install github.com/gentleman-programming/gentle-ai/v4/cmd/gentle-ai@latest } }
+if (Get-Command engram -ErrorAction SilentlyContinue) { Run 'engram binary' { $env:IA_FORCE = '1'; & "$PSScriptRoot\install.ps1" engram; Remove-Item Env:IA_FORCE } }
 if (Get-Command gentle-ai -ErrorAction SilentlyContinue) { Run 'gentle-ai sync' { gentle-ai sync } }
 if ($fail.Count) { Write-Warning ("Failed: " + ($fail -join ', ')) } else { Write-Host 'Everything updated.' }

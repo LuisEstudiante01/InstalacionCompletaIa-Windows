@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS  Windows (PowerShell) installer for the terminal + AI-agent environment.
-.USAGE     .\install.ps1 [all|packages|tools|link]
+.USAGE     .\install.ps1 [all|packages|tools|link|engram]
            Run in PowerShell 7 (pwsh). No admin needed (winget user scope).
 #>
-param([ValidateSet('all','packages','tools','link')][string]$Step = 'all')
+param([ValidateSet('all','packages','tools','link','engram')][string]$Step = 'all')
 $ErrorActionPreference = 'Continue'
 $Root = $PSScriptRoot
 $Missing = New-Object System.Collections.Generic.List[string]
@@ -32,15 +32,9 @@ function Step-Packages {
   Refresh-Path
 }
 
-function Step-Tools {
-  Say 'AI tools'
-  Refresh-Path
-  if (-not (Has claude)) { try { Invoke-RestMethod https://claude.ai/install.ps1 | Invoke-Expression } catch { $Missing.Add('claude-code') } }
-  if (-not (Has opencode) -and (Has npm)) { npm install -g opencode-ai 2>&1 | Out-Host; if (-not (Has opencode)) { $Missing.Add('opencode') } }
-  if (-not (Has codegraph) -and (Has npm)) { npm install -g '@colbymchenry/codegraph' 2>&1 | Out-Host }
-  if (-not (Has herdr)) { try { Invoke-RestMethod https://herdr.dev/install.ps1 | Invoke-Expression } catch { Write-Warning 'herdr: see https://herdr.dev/docs/windows-beta/'; $Missing.Add('herdr') } }
+function Step-Engram {
   # engram: official Windows release zip (no Go needed) -> ~\.local\bin, added to the user PATH
-  if (-not (Has engram)) {
+  if ($env:IA_FORCE -or -not (Has engram)) {
     try {
       $rel = Invoke-RestMethod https://api.github.com/repos/Gentleman-Programming/engram/releases/latest
       $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'amd64' }
@@ -54,6 +48,16 @@ function Step-Tools {
       Add-UserPath $bin
     } catch { Write-Warning "engram: $($_.Exception.Message). Manual: https://github.com/Gentleman-Programming/engram/releases"; $Missing.Add('engram') }
   }
+}
+
+function Step-Tools {
+  Say 'AI tools'
+  Refresh-Path
+  if (-not (Has claude)) { try { Invoke-RestMethod https://claude.ai/install.ps1 | Invoke-Expression } catch { $Missing.Add('claude-code') } }
+  if (-not (Has opencode) -and (Has npm)) { npm install -g opencode-ai 2>&1 | Out-Host; if (-not (Has opencode)) { $Missing.Add('opencode') } }
+  if (-not (Has codegraph) -and (Has npm)) { npm install -g '@colbymchenry/codegraph' 2>&1 | Out-Host }
+  if (-not (Has herdr)) { try { Invoke-RestMethod https://herdr.dev/install.ps1 | Invoke-Expression } catch { Write-Warning 'herdr: see https://herdr.dev/docs/windows-beta/'; $Missing.Add('herdr') } }
+  Step-Engram
   # gentle-ai has no Windows release asset: install Go automatically, then `go install`
   if (-not (Has gentle-ai)) {
     if (-not (Has go)) { Winget-Install 'GoLang.Go'; Refresh-Path }
@@ -94,5 +98,6 @@ function Step-Link {
 
 if ($Step -in 'all','packages') { Step-Packages }
 if ($Step -in 'all','tools')    { Step-Tools }
+if ($Step -eq 'engram')         { Step-Engram }
 if ($Step -in 'all','link')     { Step-Link }
 if ($Missing.Count) { Write-Warning ("Not installed: " + ($Missing -join ', ')) } else { Say 'Done.' }
