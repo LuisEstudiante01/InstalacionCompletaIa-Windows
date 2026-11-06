@@ -27,6 +27,9 @@ cd InstalacionCompletaIa-Windows
 .\install.ps1            # o: packages | tools | link
 ```
 
+Si Windows bloquea los scripts, ejecuta una vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force`. Algunos paquetes
+(p. ej. GitHub CLI) piden permiso de administrador: acepta el aviso de UAC o ejecuta el instalador desde una terminal de administrador.
+
 Elegir agentes: `$env:IA_AGENTS="claude-code,opencode"; .\install.ps1 tools`. Los archivos que ya existan se mueven a
 `~\.ia-install-backup\<fecha>`.
 
@@ -109,6 +112,9 @@ git clone https://github.com/LuisEstudiante01/InstalacionCompletaIa-Windows.git
 cd InstalacionCompletaIa-Windows
 .\install.ps1            # or: packages | tools | link
 ```
+
+If Windows blocks scripts, run once `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force`. Some packages
+(e.g. GitHub CLI) ask for administrator rights: accept the UAC prompt or run the installer from an elevated terminal.
 
 Pick agents: `$env:IA_AGENTS="claude-code,opencode"; .\install.ps1 tools`. Existing files are moved to
 `~\.ia-install-backup\<timestamp>`.
