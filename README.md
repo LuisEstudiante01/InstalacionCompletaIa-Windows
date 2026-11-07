@@ -82,8 +82,8 @@ Este repositorio es un proyecto comunitario independiente y no está afiliado ni
 ### Notas
 
 Revisa `install.ps1` antes de ejecutarlo: instala software. Se probaron en una VM con Windows 11 (Hyper-V):
-`install.ps1 packages`, `tools` y `link`, y `update.ps1` (todos los programas quedaron instalados y detectados; los enlaces de WezTerm,
-Neovim y el perfil de PowerShell se crearon). Sin probar: `schedule-update.ps1`, la ruta de configuración de
+`install.ps1 packages`, `tools` y `link`, `update.ps1` y `schedule-update.ps1` (la tarea se ejecutó con resultado 0) (todos los programas quedaron instalados y detectados; los enlaces de WezTerm,
+Neovim y el perfil de PowerShell se crearon). Sin probar: la ruta de configuración de
 herdr, el aspecto del prompt y la fuente en WezTerm. Tras instalar, abre una terminal nueva para que se actualice el PATH. Licencia MIT.
 
 [↑ Volver arriba / Back to top](#Instalacion-Completa-ia-Windows)
@@ -168,8 +168,8 @@ This repository is an independent community project and is not affiliated with o
 ### Notes
 
 Review `install.ps1` before running it: it installs software. Tested on a Windows 11 VM (Hyper-V):
-`install.ps1 packages`, `tools` and `link`, and `update.ps1` (every program was installed and detected; the WezTerm, Neovim and PowerShell
-profile links were created). Untested: `schedule-update.ps1`, herdr's config path, the prompt look and the
+`install.ps1 packages`, `tools` and `link`, `update.ps1` and `schedule-update.ps1` (the task ran with result 0) (every program was installed and detected; the WezTerm, Neovim and PowerShell
+profile links were created). Untested: herdr's config path, the prompt look and the
 WezTerm font. After installing, open a new terminal so PATH refreshes. Licensed under MIT.
 
 [↑ Back to top / Volver arriba](#Instalacion-Completa-ia-Windows)
