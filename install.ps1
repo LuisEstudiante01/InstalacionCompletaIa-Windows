@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS  Windows (PowerShell) installer for the terminal + AI-agent environment.
-.USAGE     .\install.ps1 [all|packages|tools|link|engram]
+.USAGE     .\install.ps1 [all|packages|tools|link|engram|font]
            Run in PowerShell 7 (pwsh). No admin needed (winget user scope).
 #>
-param([ValidateSet('all','packages','tools','link','engram')][string]$Step = 'all')
+param([ValidateSet('all','packages','tools','link','engram','font')][string]$Step = 'all')
 $ErrorActionPreference = 'Continue'
 $Root = $PSScriptRoot
 . "$Root\packages.ps1"
@@ -49,6 +49,26 @@ function Step-Engram {
   }
 }
 
+function Step-Font {
+  # IosevkaTerm Nerd Font is not in winget: download the official Nerd Fonts release and install it for the current user
+  $dir = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
+  $reg = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
+  if (Test-Path (Join-Path $dir 'IosevkaTermNerdFont-Regular.ttf')) { return }
+  try {
+    $tmp = Join-Path $env:TEMP 'iosevka-dl'; Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
+    New-Item -ItemType Directory -Force $tmp, $dir | Out-Null
+    Invoke-WebRequest 'https://github.com/ryanoasis/nerd-fonts/releases/latest/download/IosevkaTerm.zip' -OutFile "$tmp\f.zip"
+    Expand-Archive "$tmp\f.zip" -DestinationPath $tmp -Force
+    foreach ($n in 'Regular','Bold','Italic','BoldItalic') {
+      $f = Get-ChildItem $tmp -Filter "IosevkaTermNerdFont-$n.ttf" | Select-Object -First 1
+      if ($f) {
+        Copy-Item $f.FullName $dir -Force
+        New-ItemProperty -Path $reg -Name "IosevkaTerm Nerd Font $n (TrueType)" -Value (Join-Path $dir $f.Name) -PropertyType String -Force | Out-Null
+      }
+    }
+  } catch { Write-Warning "font: $($_.Exception.Message)"; $Missing.Add('IosevkaTerm Nerd Font') }
+}
+
 function Step-Tools {
   Say 'AI tools'
   Refresh-Path
@@ -71,8 +91,7 @@ function Step-Tools {
     $agents = if ($env:IA_AGENTS) { $env:IA_AGENTS } else { 'claude-code,opencode' }
     gentle-ai install --agent $agents --preset full-gentleman 2>&1 | Out-Host
   }
-  # Font (IosevkaTerm Nerd Font) via winget when available
-  winget install --id DEVCOM.IosevkaTermNerdFont -e --source winget --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null
+  Step-Font
 }
 
 function Link($src, $dst) {
@@ -98,5 +117,6 @@ function Step-Link {
 if ($Step -in 'all','packages') { Step-Packages }
 if ($Step -in 'all','tools')    { Step-Tools }
 if ($Step -eq 'engram')         { Step-Engram }
+if ($Step -eq 'font')           { Step-Font }
 if ($Step -in 'all','link')     { Step-Link }
 if ($Missing.Count) { Write-Warning ("Not installed: " + ($Missing -join ', ')) } else { Say 'Done.' }
