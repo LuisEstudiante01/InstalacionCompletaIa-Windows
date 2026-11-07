@@ -6,6 +6,7 @@
 param([ValidateSet('all','packages','tools','link','engram')][string]$Step = 'all')
 $ErrorActionPreference = 'Continue'
 $Root = $PSScriptRoot
+. "$Root\packages.ps1"
 $Missing = New-Object System.Collections.Generic.List[string]
 function Say($m) { Write-Host "==> $m" -ForegroundColor Cyan }
 function Has($c) { [bool](Get-Command $c -ErrorAction SilentlyContinue) }
@@ -25,9 +26,7 @@ function Add-UserPath($dir) {
 function Step-Packages {
   if (-not (Has winget)) { Write-Warning 'winget not found. Install "App Installer" from the Microsoft Store.'; return }
   Say 'Packages (winget)'
-  $ids = @('Git.Git','GitHub.cli','Neovim.Neovim','OpenJS.NodeJS.LTS','junegunn.fzf','sharkdp.bat','eza-community.eza',
-           'sharkdp.fd','ajeetdsouza.zoxide','Starship.Starship','JesseDuffield.lazygit','wez.wezterm','Microsoft.PowerShell',
-           'BurntSushi.ripgrep.MSVC','Anthropic.ClaudeCode')
+  $ids = $IaPackages
   foreach ($i in $ids) { Winget-Install $i }
   Refresh-Path
 }
