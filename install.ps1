@@ -5,6 +5,7 @@
 #>
 param([ValidateSet('all','packages','tools','link','engram','font')][string]$Step = 'all')
 $ErrorActionPreference = 'Continue'
+$ProgressPreference = 'SilentlyContinue'  # the progress bar makes Invoke-WebRequest very slow
 $Root = $PSScriptRoot
 . "$Root\packages.ps1"
 $Missing = New-Object System.Collections.Generic.List[string]
